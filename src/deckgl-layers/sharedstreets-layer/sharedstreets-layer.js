@@ -21,7 +21,7 @@
 /* global fetch */
 
 import {CompositeLayer} from '@deck.gl/core';
-import DeckGLTileLayer from '@deck.gl/experimental-layers/dist/tile-layer/tile-layer';
+import {TileLayer as DeckGLTileLayer} from '@deck.gl/experimental-layers';
 import Pbf from "pbf";
 import * as geobuf from "geobuf";
 import dataProcessor from 'processors';
@@ -59,8 +59,8 @@ export default class SharedstreetsLayer extends CompositeLayer {
       if (!this.state.isTiledSampleDataLoaded) {
         this.props.addTiledDatasetSample({
           info: {
-            label: 'sharedstreets',
-            id: "sharedstreets"
+            label: this.props.dataId,
+            id: this.props.dataId
           },
           data: dataProcessor.processGeojson(geoJson)
         });
@@ -79,11 +79,12 @@ export default class SharedstreetsLayer extends CompositeLayer {
    * @param {*} subLayerProps 
    * @param {*} tile current tile for this sub-layers 
    */
-  renderSubLayers(subLayerProps, tile) {
+  renderSubLayers(subLayerProps) {
     const {layers, objectHovered, mapState, interactionConfig, layerVersion} = this.props;
     const {oldLayerDataMaps} = this.state;
     // layers are kepler layers rendering a subset of data. We can render other layers in the 
     // viewport by giving different ids and data. 
+    const tile = subLayerProps.tile;
     return layers && layers.map((layer, idx) => {
       const layerDataId = `${layer.id}-${tile.z}-${tile.x}-${tile.y}`;
       let oldLayerData;

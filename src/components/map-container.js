@@ -348,10 +348,10 @@ export default function MapContainerFactory(MapPopover, MapControl) {
       });
       // render layers for tiled data sources, from sample data layers.
       tiledDatasets.forEach(tiledDataset => {
-        const sampleKeplerLayers = layers.filter(layer => layer.config.dataId === tiledDataset)
+        const sampleKeplerLayers = layers.filter(layer => layer.config.dataId === tiledDataset);
         // For now, we assume all tiled datasets are Sharedstreets datasets, thus we render
         // sharedstreets layers.
-        const sharedstreetsLayer = this._renderSharedstreetsLayer(sampleKeplerLayers);
+        const sharedstreetsLayer = this._renderSharedstreetsLayer(sampleKeplerLayers, tiledDataset);
         layersToRender.push(sharedstreetsLayer);
       });
 
@@ -368,7 +368,7 @@ export default function MapContainerFactory(MapPopover, MapControl) {
       );
     }
 
-    _renderSharedstreetsLayer(sampleDataLayers) {
+    _renderSharedstreetsLayer(sampleDataLayers, dataId) {
       const {
         visStateActions,
         mapState,
@@ -381,6 +381,7 @@ export default function MapContainerFactory(MapPopover, MapControl) {
 
       return new SharedstreetsLayer({
         id: 'sharedstreet',
+        dataId,
         addTiledDatasetSample: visStateActions.addTiledDatasetSample,
         layers: sampleDataLayers,
         layerVersion,
